@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><title>Incident trace: retrieval dominates duration</title>
+<style>body{font:17px Arial;background:#f2f6fa;color:#163447;margin:32px}pre{font:15px Consolas,monospace;white-space:pre-wrap;background:white;border:1px solid #cad8e3;border-radius:8px;padding:24px;line-height:1.5}p{line-height:1.5}</style>
+<h1>Incident trace: retrieval dominates duration</h1><p>Local viewer of actual Langfuse API export in data.json. Project: My Project. NOT a Langfuse UI screenshot.</p><pre>Trace: 3bb81aa5c08486dbbaf5ff99b35ab4b5
+Correlation ID: req-712a43f2
+
+lab-agent-run         2658.0 ms  DEFAULT
+  ID: 4d2a5ee3c43f07db   parent: None
+  2026-09-29T09:55:50.338Z -&gt; 2026-09-29T09:55:52.996Z
+
+retrieval             2502.0 ms  DEFAULT
+  ID: 2366b4edc0ce2afe   parent: 4d2a5ee3c43f07db
+  2026-09-29T09:55:50.340Z -&gt; 2026-09-29T09:55:52.842Z
+
+prompt-resolution        1.0 ms  DEFAULT
+  ID: 65e58cb7e0821a36   parent: 4d2a5ee3c43f07db
+  2026-09-29T09:55:52.842Z -&gt; 2026-09-29T09:55:52.843Z
+
+generation             152.0 ms  DEFAULT
+  ID: 785980b1917c3eb7   parent: 4d2a5ee3c43f07db
+  2026-09-29T09:55:52.843Z -&gt; 2026-09-29T09:55:52.995Z
+
+</pre>

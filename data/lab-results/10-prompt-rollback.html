@@ -1,0 +1,40 @@
+<!doctype html><meta charset="utf-8"><title>Production: promote v2, rollback v1</title>
+<style>body{font:17px Arial;background:#f2f6fa;color:#163447;margin:32px}pre{font:15px Consolas,monospace;white-space:pre-wrap;background:white;border:1px solid #cad8e3;border-radius:8px;padding:24px;line-height:1.5}p{line-height:1.5}</style>
+<h1>Production: promote v2, rollback v1</h1><p>Local viewer of actual Langfuse API export in data.json. Project: My Project. NOT a Langfuse UI screenshot.</p><pre>{
+  &quot;transitions&quot;: [
+    {
+      &quot;at&quot;: &quot;2026-09-29T09:55:46.384757Z&quot;,
+      &quot;production_version&quot;: 2
+    },
+    {
+      &quot;at&quot;: &quot;2026-09-29T09:55:47.308164Z&quot;,
+      &quot;production_version&quot;: 1
+    }
+  ],
+  &quot;traces&quot;: [
+    {
+      &quot;phase&quot;: &quot;prompt-baseline&quot;,
+      &quot;label&quot;: &quot;baseline&quot;,
+      &quot;version&quot;: 1,
+      &quot;trace_id&quot;: &quot;a5d24ebf6557fdb083c649d9b98858f8&quot;
+    },
+    {
+      &quot;phase&quot;: &quot;prompt-candidate&quot;,
+      &quot;label&quot;: &quot;candidate&quot;,
+      &quot;version&quot;: 2,
+      &quot;trace_id&quot;: &quot;ba56173c1ae9afad1bef418a51805ab6&quot;
+    },
+    {
+      &quot;phase&quot;: &quot;prompt-promoted&quot;,
+      &quot;label&quot;: &quot;production&quot;,
+      &quot;version&quot;: 2,
+      &quot;trace_id&quot;: &quot;04316396eb794c5d3eba6c4c64be61b7&quot;
+    },
+    {
+      &quot;phase&quot;: &quot;prompt-rollback&quot;,
+      &quot;label&quot;: &quot;production&quot;,
+      &quot;version&quot;: 1,
+      &quot;trace_id&quot;: &quot;c3218c801ae99215834f9d457c84eb34&quot;
+    }
+  ]
+}</pre>

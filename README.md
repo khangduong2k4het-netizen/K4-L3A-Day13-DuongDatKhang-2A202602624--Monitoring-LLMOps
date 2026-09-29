@@ -106,7 +106,17 @@ Chi tiết từng checkpoint nằm trong [docs/CHECKPOINTS.md](docs/CHECKPOINTS.
 - `app/logging_config.py`: chạy PII scrubber trước bước ghi file/render JSON.
 - `app/pii.py`: hoàn thiện pattern và tests cho email, điện thoại Việt Nam, CCCD và thẻ thanh toán.
 
-`validate_logs.py` đọc toàn bộ `data/logs.jsonl`. Sau khi lưu baseline, hãy xóa hoặc đổi tên log cũ, khởi động lại API rồi đo lại để không bị tính các dòng chưa scrub.
+`validate_logs.py` kiểm tra toàn bộ **log của lần chạy mới** tại `data/logs.jsonl`; không trộn log trước và sau khi sửa. Dừng API cũ bằng `Ctrl+C`, rồi chạy quy trình tự động trong PowerShell:
+
+```powershell
+.\scripts\recheck_logs.ps1
+```
+
+Nếu PowerShell chặn chạy script, dùng `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\recheck_logs.ps1` (chỉ áp dụng cho tiến trình này, không thay đổi policy toàn máy).
+
+Script lưu output validator baseline, đổi tên log cũ thành `data/log-runs/<timestamp>/baseline.jsonl`, khởi động API mới, chờ `/health`, chạy load test và lưu output validator mới trong cùng thư mục. Nếu chưa có log cũ, script ghi rõ chưa có baseline. Log mới vẫn ở `data/logs.jsonl`; API do script khởi động sẽ dừng khi script kết thúc. Muốn tiếp tục demo, chạy lại lệnh Uvicorn ở trên.
+
+Mặc định script dùng `.venv\Scripts\python.exe`; có thể truyền `-Python <đường-dẫn-python>` và `-Concurrency 5`. Nếu port 8000 còn được sử dụng, script dừng trước khi đổi tên log. Thư mục `data/log-runs/` được Git bỏ qua vì baseline có thể chứa PII chưa scrub. Chỉ đưa kết quả đã kiểm tra vào evidence; mục tiêu là ≥80/100 và không còn PII nguyên văn.
 
 ### CP2 — Tracing, prompt và dashboard
 
@@ -177,3 +187,21 @@ Không push bài làm trực tiếp lên repo đề bài và không dùng chung 
 - [RUBRIC.md](docs/RUBRIC.md), [RULES.md](docs/RULES.md), [SUBMISSION.md](docs/SUBMISSION.md): cách chấm, quy định và cách nộp.
 - [grading-evidence.md](docs/grading-evidence.md): checklist nhanh các ảnh/output cần thu thập.
 - [REPORT.md](submission/REPORT.md): báo cáo cá nhân duy nhất cần hoàn thiện.
+# Dashboard và evidence
+
+Log/trace/metric/prompt đối chiếu được gom trong `data.json` (object `datasets`).
+`submission/evidence/` chỉ chứa ảnh chụp PNG. Output text và trang xem dữ liệu nằm
+trong `data/lab-results/`; ảnh viewer API được ghi nhãn rõ, không phải UI Langfuse.
+
+```powershell
+python scripts/dashboard.py --log data.json --port 8501 --end 2026-09-29T09:56:06.337797Z
+python scripts/render_evidence.py
+```
+
+Mở `http://127.0.0.1:8501` để xem sáu panel. Bỏ `--end` và dùng
+`--log data/logs.jsonl` để theo dõi log mới, refresh 30 giây.
+
+`python scripts/complete_lab.py --run` thực hiện workload cô lập và **ghi vào Langfuse**:
+tạo prompt baseline/candidate nếu thiếu, thử promote rồi rollback production về baseline,
+gửi traces và lưu manifest/log vào `data.json`. Chỉ chạy khi muốn lặp lại lab.
+`python scripts/complete_lab.py --collect` chỉ đọc observations của lượt mới nhất.
